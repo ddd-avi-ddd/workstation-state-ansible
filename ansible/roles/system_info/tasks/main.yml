@@ -1,0 +1,24 @@
+---
+- name: Collect Hardware Info
+ win_shell: |
+   Get-WmiObject Win32_ComputerSystem | 
+   Select-Object Name,Manufacturer,Model,SystemType,TotalPhysicalMemory
+ register: hardware_info
+
+- name: Collect CPU Info
+ win_shell: |
+   Get-WmiObject Win32_Processor | 
+   Select-Object Name,NumberOfCores,MaxClockSpeed
+ register: cpu_info
+
+- name: Collect Memory Info
+ win_shell: |
+   Get-WmiObject Win32_OperatingSystem | 
+   Select-Object TotalVisibleMemorySize,FreePhysicalMemory
+ register: memory_info
+
+- name: Collect Network Info
+ win_shell: |
+   Get-NetAdapter | 
+   Select-Object Name,InterfaceDescription,Status,LinkSpeed
+ register: network_info

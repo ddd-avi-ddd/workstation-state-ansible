@@ -1,0 +1,15 @@
+---
+- name: Add new snapshots
+ shell: git add /snapshots/{{ workstation_name }}/*.json
+ args:
+   chdir: "{{ git_repo_path }}"
+
+- name: Commit changes
+ shell: git commit -m "feat(snapshot): Update {{ workstation_name }} state - {{ timestamp }}"
+ args:
+   chdir: "{{ git_repo_path }}"
+
+- name: Push changes
+ shell: git push origin develop
+ args:
+   chdir: "{{ git_repo_path }}"

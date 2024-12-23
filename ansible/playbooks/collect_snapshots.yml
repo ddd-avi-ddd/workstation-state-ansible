@@ -1,0 +1,12 @@
+---
+- name: Collect Workstation State
+ hosts: workstations
+ gather_facts: true
+
+ roles:
+   - system_info
+   - snapshot_mgmt
+   - git_ops
+
+ vars:
+   git_repo_path: "/path/to/repo"

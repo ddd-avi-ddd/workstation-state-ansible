@@ -1,0 +1,18 @@
+---
+- name: Create timestamp
+ set_fact:
+   timestamp: "{{ lookup('pipe', 'date +%Y_%m_%d_%H%M') }}"
+
+- name: Combine system information
+ set_fact:
+   system_state:
+     hardware: "{{ hardware_info.stdout }}"
+     cpu: "{{ cpu_info.stdout }}"
+     memory: "{{ memory_info.stdout }}"
+     network: "{{ network_info.stdout }}"
+     timestamp: "{{ timestamp }}"
+
+- name: Save snapshot
+ template:
+   src: snapshot.json.j2
+   dest: "/snapshots/{{ workstation_name }}/{{ timestamp }}_{{ workstation_name }}_Snapshot.json"

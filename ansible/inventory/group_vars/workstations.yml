@@ -1,0 +1,2 @@
+workstation_name: DEMO-009
+snapshot_path: /snapshots/{{ workstation_name }}

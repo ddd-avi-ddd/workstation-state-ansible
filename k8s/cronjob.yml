@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
  name: workstation-state-collector
 spec:
- schedule: "0 3 * * *"  # 3 AM daily
+ schedule: "0 3 * * *"
  jobTemplate:
    spec:
      template:
@@ -11,6 +11,17 @@ spec:
          containers:
          - name: ansible-runner
            image: registry.redhat.io/ansible-automation-platform/ansible-runner-rhel8:latest
+           env:
+           - name: ANSIBLE_USER
+             valueFrom:
+               secretKeyRef:
+                 name: ansible-secrets
+                 key: ansible_user
+           - name: ANSIBLE_PASSWORD
+             valueFrom:
+               secretKeyRef:
+                 name: ansible-secrets
+                 key: ansible_password
            volumeMounts:
            - name: ansible-config
              mountPath: /etc/ansible
@@ -25,5 +36,9 @@ spec:
              name: ansible-config
          - name: ssh-key
            secret:
-             secretName: git-ssh-key
+             secretName: ansible-secrets
+             items:
+             - key: git_ssh_key
+               path: id_rsa
+               mode: 0600
          restartPolicy: OnFailure

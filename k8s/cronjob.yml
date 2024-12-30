@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+ name: workstation-state-collector
+spec:
+ schedule: "0 3 * * *"  # 3 AM daily
+ jobTemplate:
+   spec:
+     template:
+       spec:
+         containers:
+         - name: ansible-runner
+           image: registry.redhat.io/ansible-automation-platform/ansible-runner-rhel8:latest
+           volumeMounts:
+           - name: ansible-config
+             mountPath: /etc/ansible
+           - name: ssh-key
+             mountPath: /root/.ssh
+           command:
+           - ansible-playbook
+           - playbooks/collect_snapshots.yml
+         volumes:
+         - name: ansible-config
+           configMap:
+             name: ansible-config
+         - name: ssh-key
+           secret:
+             secretName: git-ssh-key
+         restartPolicy: OnFailure
